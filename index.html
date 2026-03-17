@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Treino Mariana">
+<meta name="theme-color" content="#0A0A0F">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Protocolo de Treino — Mariana</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVHJlaW5vIE1hcmlhbmEiLCJzaG9ydF9uYW1lIjoiVHJlaW5vIiwiZGVzY3JpcHRpb24iOiJQcm90b2NvbG8gZGUgVHJlaW5hbWVudG8gLSBNYXJpYW5hIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwQTBBMEYiLCJ0aGVtZV9jb2xvciI6IiMwQTBBMEYiLCJpY29ucyI6W119">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0A0A0F;--card:#13131A;--card2:#1A1A24;--border:#222233;
+  --red:#FF4757;--red-glow:#FF475730;--purple:#7C5CFC;--purple-glow:#7C5CFC30;
+  --green:#2ED573;--orange:#FFA502;--yellow:#ECCC68;
+  --text:#F1F1F5;--text2:#A0A0B8;--text3:#5E5E78;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;
+  overflow-x:hidden;min-height:100vh;min-height:100dvh;overscroll-behavior-y:contain}
+body{padding-top:var(--safe-top);padding-bottom:calc(72px + var(--safe-bottom))}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+.fade-up{animation:fadeUp .5s cubic-bezier(.22,1,.36,1) both}
+.slide-in{animation:slideIn .4s cubic-bezier(.22,1,.36,1) both}
+
+/* ===== HEADER ===== */
+.hero{position:relative;padding:28px 20px 24px;overflow:hidden;
+  background:linear-gradient(145deg,#12121E 0%,#1A1230 50%,#0E1428 100%)}
+.hero::before{content:'';position:absolute;top:-60px;right:-40px;width:180px;height:180px;
+  border-radius:50%;background:radial-gradient(circle,var(--red-glow),transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-30px;left:10%;width:140px;height:140px;
+  border-radius:50%;background:radial-gradient(circle,var(--purple-glow),transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;
+  background:rgba(255,71,87,.12);border:1px solid rgba(255,71,87,.25);border-radius:20px;
+  font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px}
+.hero-badge i{width:22px;height:22px;border-radius:50%;background:var(--red);
+  display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:.04em;line-height:1;color:#fff;margin-bottom:4px}
+.hero p{font-size:12px;color:var(--text3);line-height:1.5;max-width:85%}
+.method-tag{display:inline-block;margin-top:12px;padding:6px 14px;
+  background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);border-radius:8px;
+  font-size:10px;font-weight:700;color:var(--purple);letter-spacing:.06em}
+
+/* ===== TAB BAR (bottom nav) ===== */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;padding:6px 12px calc(8px + var(--safe-bottom));gap:4px;
+  background:rgba(10,10,15,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border)}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;border:none;background:none;color:var(--text3);cursor:pointer;
+  border-radius:12px;transition:all .25s;font-family:'DM Sans',sans-serif}
+.tab-btn.active{color:var(--red);background:var(--red-glow)}
+.tab-btn .tab-icon{font-size:20px;line-height:1}
+.tab-btn .tab-label{font-size:10px;font-weight:700;letter-spacing:.04em}
+
+/* ===== PAGES ===== */
+.page{display:none;padding:16px 16px 20px}
+.page.active{display:block}
+
+/* ===== SCHEDULE ===== */
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.section-title .bar{width:3px;height:22px;border-radius:2px}
+.section-title h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.05em;color:#fff}
+.day-card{display:flex;align-items:center;gap:14px;padding:14px 16px;
+  background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:8px;
+  transition:all .2s;position:relative;overflow:hidden}
+.day-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+.day-card[data-type="A"]::before{background:var(--red)}
+.day-card[data-type="B"]::before{background:var(--purple)}
+.day-card[data-type="rest"]::before{background:var(--green)}
+.day-card[data-type="cardio"]::before{background:var(--orange)}
+.day-card[data-type="off"]::before{background:var(--text3)}
+.day-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.day-info{flex:1;min-width:0}
+.day-name{font-weight:700;font-size:14px;color:#fff}
+.day-label{font-size:11px;font-weight:600;margin-top:1px}
+.day-desc{font-size:10px;color:var(--text3);margin-top:2px}
+.day-arrow{font-size:16px;color:var(--text3);transition:transform .2s}
+.day-card:active .day-arrow{transform:translateX(3px)}
+
+/* Volume cards */
+.vol-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.vol-item{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  background:var(--card);border-radius:10px;border:1px solid var(--border)}
+.vol-bar{width:4px;height:24px;border-radius:2px}
+.vol-name{font-size:12px;font-weight:700;color:var(--text)}
+.vol-sets{font-size:10px;color:var(--text3)}
+
+/* ===== WORKOUT ===== */
+.workout-toggle{display:flex;gap:6px;margin-bottom:16px}
+.workout-toggle button{flex:1;padding:14px 8px;background:var(--card);border:2px solid var(--border);
+  border-radius:14px;cursor:pointer;transition:all .25s;font-family:'DM Sans',sans-serif;text-align:center}
+.workout-toggle button.active-a{border-color:var(--red);background:rgba(255,71,87,.06)}
+.workout-toggle button.active-b{border-color:var(--purple);background:rgba(124,92,252,.06)}
+.workout-toggle .btn-title{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:.04em}
+.workout-toggle .btn-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.workout-toggle button:not(.active-a):not(.active-b) .btn-title{color:var(--text3)}
+
+.timer-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  background:var(--card);border-radius:10px;margin-bottom:16px;border:1px solid var(--border)}
+.timer-bar span{font-size:12px;color:var(--text3)}
+.timer-bar strong{color:#fff}
+.timer-bar .spacer{flex:1}
+
+/* Group */
+.group-block{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;margin-bottom:12px}
+.group-header{padding:11px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border)}
+.group-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.group-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.group-count{font-size:10px;color:var(--text3)}
+
+/* Exercise row */
+.ex-row{display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,.03);transition:background .15s;position:relative}
+.ex-row:last-child{border-bottom:none}
+.ex-row:active{background:rgba(255,255,255,.03)}
+.ex-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0}
+.ex-info{flex:1;min-width:0}
+.ex-name{font-weight:700;font-size:13px;color:#fff}
+.ex-muscle{font-size:10px;color:var(--text3);margin-top:1px}
+.ex-stats{display:flex;gap:6px;flex-shrink:0}
+.stat-box{text-align:center;padding:5px 10px;border-radius:8px;min-width:42px}
+.stat-label{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.02em;margin-top:-1px}
+
+/* Checkbox for tracking */
+.ex-check{width:28px;height:28px;border-radius:8px;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;
+  transition:all .25s;font-size:14px;color:transparent}
+.ex-check.done{border-color:var(--green);background:var(--green);color:#fff;animation:checkPop .35s}
+
+/* ===== TIPS ===== */
+.info-card{padding:18px;background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:12px}
+.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.04em;margin-bottom:10px}
+.info-card p{font-size:12px;color:var(--text2);line-height:1.7}
+.info-card strong{color:#fff}
+
+.prog-step{display:flex;gap:12px;align-items:flex-start;padding:12px;
+  background:rgba(255,255,255,.02);border-radius:12px;margin-bottom:8px}
+.prog-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;flex-shrink:0}
+.prog-info .prog-title{font-weight:700;font-size:13px;color:#fff}
+.prog-info .prog-desc{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.5}
+
+.tip-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;
+  background:rgba(255,255,255,.02);border-radius:10px;margin-bottom:6px}
+.tip-num{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px}
+.tip-text{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* Motivation */
+.motivation{text-align:center;padding:28px 20px;margin-top:8px;
+  background:linear-gradient(145deg,#1A1230,#12121E);border-radius:16px;border:1px solid var(--border)}
+.motivation h3{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.06em;color:#fff;margin-bottom:6px}
+.motivation p{font-size:11px;color:var(--text3)}
+
+/* ===== TIMER MODAL ===== */
+.rest-timer{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.rest-timer.show{display:flex}
+.rest-timer-inner{text-align:center;padding:40px;animation:fadeUp .4s}
+.rest-timer-inner .timer-display{font-family:'Bebas Neue',sans-serif;font-size:80px;color:#fff;letter-spacing:.04em}
+.rest-timer-inner .timer-label{font-size:13px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.1em}
+.rest-timer-inner button{margin-top:20px;padding:12px 32px;border:none;border-radius:12px;
+  background:var(--red);color:#fff;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+
+/* Install banner */
+.install-banner{display:none;padding:14px 16px;margin:0 16px 12px;
+  background:linear-gradient(90deg,rgba(124,92,252,.12),rgba(255,71,87,.08));
+  border:1px solid rgba(124,92,252,.25);border-radius:14px;
+  align-items:center;gap:12px;cursor:pointer}
+.install-banner.show{display:flex}
+.install-banner .ib-icon{font-size:24px}
+.install-banner .ib-text{flex:1}
+.install-banner .ib-title{font-weight:700;font-size:13px;color:#fff}
+.install-banner .ib-desc{font-size:10px;color:var(--text3);margin-top:1px}
+.install-banner .ib-close{font-size:18px;color:var(--text3);padding:4px}
+
+/* Progress ring */
+.progress-ring{position:relative;width:100%;height:6px;background:var(--card2);border-radius:3px;
+  margin:12px 0;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s cubic-bezier(.22,1,.36,1)}
+.progress-label{font-size:11px;color:var(--text3);text-align:center;margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="hero fade-up">
+  <div class="hero-badge"><i>⚡</i> PROTOCOLO DE TREINAMENTO</div>
+  <h1>MARIANA</h1>
+  <p>Personal Trainer Hellen Oliveira</p>
+  <div class="method-tag">MÉTODO D.U.P. — Periodização Ondulatória Diária</div>
+</div>
+
+<!-- ===== INSTALL BANNER ===== -->
+<div class="install-banner" id="installBanner" onclick="installApp()">
+  <div class="ib-icon">📲</div>
+  <div class="ib-text">
+    <div class="ib-title">Instalar como App</div>
+    <div class="ib-desc">Adicione à tela inicial para acesso rápido</div>
+  </div>
+  <div class="ib-close" onclick="event.stopPropagation();document.getElementById('installBanner').classList.remove('show')">✕</div>
+</div>
+
+<!-- ===== PAGES ===== -->
+
+<!-- SCHEDULE PAGE -->
+<div class="page active" id="page-schedule">
+  <div class="section-title slide-in">
+    <div class="bar" style="background:var(--red)"></div>
+    <h2>CRONOGRAMA SEMANAL</h2>
+  </div>
+
+  <div id="scheduleCards"></div>
+
+  <div style="margin-top:20px">
+    <div class="section-title slide-in">
+      <div class="bar" style="background:var(--purple)"></div>
+      <h2>VOLUME SEMANAL</h2>
+    </div>
+    <div class="vol-grid" id="volumeGrid"></div>
+  </div>
+</div>
+
+<!-- WORKOUT PAGE -->
+<div class="page" id="page-workout">
+  <div class="workout-toggle">
+    <button id="btnA" class="active-a" onclick="switchWorkout('A')">
+      <div class="btn-title">TREINO A</div>
+      <div class="btn-sub">Upper + Glúteo + Core</div>
+    </button>
+    <button id="btnB" onclick="switchWorkout('B')">
+      <div class="btn-title">TREINO B</div>
+      <div class="btn-sub">Lower + Costas + Core</div>
+    </button>
+  </div>
+
+  <div class="timer-bar">
+    <span>⏱️</span><span>Tempo: <strong>55-70 min</strong></span>
+    <span class="spacer"></span>
+    <span>Descanso: 60-90s</span>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-ring"><div class="progress-fill" id="progressFill" style="width:0%;background:var(--green)"></div></div>
+  <div class="progress-label" id="progressLabel">0 de 0 exercícios completos</div>
+
+  <div id="workoutContent"></div>
+
+  <div style="text-align:center;margin-top:16px">
+    <button onclick="showRestTimer()" style="padding:12px 28px;border:none;border-radius:12px;
+      background:var(--card2);border:1px solid var(--border);color:var(--text2);
+      font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer">
+      ⏱️ Timer de Descanso
+    </button>
+  </div>
+</div>
+
+<!-- TIPS PAGE -->
+<div class="page" id="page-tips">
+  <div class="section-title slide-in">
+    <div class="bar" style="background:var(--purple)"></div>
+    <h2>O MÉTODO D.U.P.</h2>
+  </div>
+
+  <div class="info-card">
+    <p>A <strong>Periodização Ondulatória Diária</strong> (Daily Undulating Periodization) é o método com maior respaldo em meta-análises para hipertrofia e força. Em vez de manter a mesma intensidade por semanas, você varia estímulos a cada sessão — combinando supersets, tri-sets, isometria, tempos controlados e explosão.</p>
+    <p style="margin-top:8px">Isso gera <strong>maior adaptação neuromuscular</strong>, evita platôs e maximiza hipertrofia treinando cada grupo <strong>2× por semana</strong>.</p>
+  </div>
+
+  <div class="section-title" style="margin-top:20px">
+    <div class="bar" style="background:var(--orange)"></div>
+    <h2>PROGRESSÃO — 7 SEMANAS</h2>
+  </div>
+  <div id="progressionSteps"></div>
+
+  <div class="section-title" style="margin-top:20px">
+    <div class="bar" style="background:var(--yellow)"></div>
+    <h2>DICAS IMPORTANTES</h2>
+  </div>
+  <div id="tipsList"></div>
+
+  <div class="motivation">
+    <h3>VOCÊ SEMPRE PODE MAIS!</h3>
+    <p>Bom treino, Mariana! — Personal Trainer Hellen Oliveira</p>
+  </div>
+</div>
+
+<!-- REST TIMER MODAL -->
+<div class="rest-timer" id="restTimer">
+  <div class="rest-timer-inner">
+    <div class="timer-label">Tempo de descanso</div>
+    <div class="timer-display" id="timerDisplay">01:30</div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
+      <button onclick="startTimer(60)" style="background:var(--card2);border:1px solid var(--border)">60s</button>
+      <button onclick="startTimer(90)">90s</button>
+      <button onclick="startTimer(120)" style="background:var(--card2);border:1px solid var(--border)">120s</button>
+    </div>
+    <button onclick="closeTimer()" style="margin-top:16px;background:var(--text3)">Fechar</button>
+  </div>
+</div>
+
+<!-- ===== BOTTOM TAB BAR ===== -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('schedule',this)">
+    <span class="tab-icon">📅</span>
+    <span class="tab-label">Semana</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('workout',this)">
+    <span class="tab-icon">🏋️</span>
+    <span class="tab-label">Treino</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('tips',this)">
+    <span class="tab-icon">📋</span>
+    <span class="tab-label">Dicas</span>
+  </button>
+</div>
+
+<script>
+// ===== DATA =====
+const WEEKLY = [
+  {day:"Segunda",type:"A",label:"Treino A",desc:"Upper + Glúteo + Core",color:"#FF4757",dur:"55-70 min"},
+  {day:"Terça",type:"B",label:"Treino B",desc:"Lower + Costas + Core",color:"#7C5CFC",dur:"55-70 min"},
+  {day:"Quarta",type:"rest",label:"Recuperação Ativa",desc:"Caminhada leve / yoga / foam roller",color:"#2ED573",dur:"30 min"},
+  {day:"Quinta",type:"A",label:"Treino A",desc:"Upper + Glúteo + Core",color:"#FF4757",dur:"55-70 min"},
+  {day:"Sexta",type:"B",label:"Treino B",desc:"Lower + Costas + Core",color:"#7C5CFC",dur:"55-70 min"},
+  {day:"Sábado",type:"cardio",label:"Cardio / Mobilidade",desc:"30-40 min LISS ou alongamento",color:"#FFA502",dur:"30-40 min"},
+  {day:"Domingo",type:"off",label:"Descanso Total",desc:"Recuperação muscular completa",color:"#5E5E78",dur:""},
+];
+
+const VOLUMES = [
+  {name:"Glúteo",sets:"~20 séries",color:"#FF4757"},
+  {name:"Quadríceps",sets:"~16 séries",color:"#7C5CFC"},
+  {name:"Core",sets:"~12 séries",color:"#FFA502"},
+  {name:"Peitoral",sets:"~10 séries",color:"#FF6B6B"},
+  {name:"Ombros",sets:"~10 séries",color:"#FF8E53"},
+  {name:"Tríceps",sets:"~8 séries",color:"#D63031"},
+  {name:"Panturrilha",sets:"~8 séries",color:"#2ED573"},
+  {name:"Costas",sets:"~6 séries",color:"#A29BFE"},
+];
+
+const EXERCISES = {
+  A: [
+    {group:"Superset 1",color:"#FF4757",items:[
+      {name:"Supino Máquina",sets:4,reps:"12",style:"",muscle:"Peitoral",obs:"Controle na descida",icon:"🏋️‍♀️"},
+      {name:"Elevação Lateral",sets:4,reps:"12",style:"Halter",muscle:"Ombros",obs:"Supinada",icon:"💪"},
+    ]},
+    {group:"Superset 2",color:"#FF8E53",items:[
+      {name:"Sumo Livre",sets:3,reps:"10",style:"Halter",muscle:"Glúteo / Posterior",obs:"10kg ou mais",icon:"🦵"},
+      {name:"Elevação Frontal",sets:3,reps:"12",style:"Halter",muscle:"Ombros",obs:"",icon:"🙆‍♀️"},
+    ]},
+    {group:"Tri-set",color:"#E84393",items:[
+      {name:"Elevação Pélvica",sets:3,reps:"10",style:"Iso 3s",muscle:"Glúteo",obs:"Isometria 3 segundos",icon:"🍑"},
+      {name:"Elevação Pélvica",sets:3,reps:"—",style:"Iso",muscle:"Glúteo",obs:"Contração máxima",icon:"🍑"},
+      {name:"Tríceps Testa",sets:3,reps:"12",style:"Halter",muscle:"Tríceps",obs:"",icon:"💪"},
+    ]},
+    {group:"Superset 3",color:"#D63031",items:[
+      {name:"Cadeira Abdutora",sets:3,reps:"10-8",style:"",muscle:"Glúteo / Abdutores",obs:"Drop set",icon:"🦵"},
+      {name:"Sumo 2 Tempos",sets:3,reps:"10-8",style:"",muscle:"Glúteo / Posterior",obs:"Cadência controlada",icon:"🦵"},
+    ]},
+    {group:"Tri-set Final",color:"#C0392B",items:[
+      {name:"Prancha Lateral",sets:3,reps:"15s",style:"Cada lado",muscle:"Core / Oblíquos",obs:"Manter alinhamento",icon:"🧘‍♀️"},
+      {name:"Abdômen Canivete",sets:3,reps:"12",style:"Halter",muscle:"Core / Reto abdominal",obs:"",icon:"🔥"},
+      {name:"Flexão de Apoio",sets:3,reps:"10",style:"No halter",muscle:"Peitoral / Tríceps",obs:"Joelhos se necessário",icon:"🏋️‍♀️"},
+    ]},
+  ],
+  B: [
+    {group:"Tri-set 1",color:"#7C5CFC",items:[
+      {name:"Leg 180°",sets:4,reps:"1×10 + 3×10",style:"Pés paralelos",muscle:"Quadríceps / Glúteo",obs:"Progressão de carga",icon:"🦵"},
+      {name:"Panturrilha",sets:4,reps:"12",style:"No leg 180",muscle:"Panturrilha",obs:"Amplitude total",icon:"🦶"},
+      {name:"Agachamento",sets:4,reps:"10",style:"Halter",muscle:"Quadríceps / Glúteo",obs:"Segurando na frente",icon:"🏋️‍♀️"},
+    ]},
+    {group:"Superset 1",color:"#A29BFE",items:[
+      {name:"Hack Squat",sets:3,reps:"10",style:"",muscle:"Quadríceps",obs:"Profundidade total",icon:"🦵"},
+      {name:"Afundo",sets:3,reps:"8",style:"",muscle:"Quadríceps / Glúteo",obs:"Cada perna",icon:"🚶‍♀️"},
+    ]},
+    {group:"Quad-set",color:"#5B4FCF",items:[
+      {name:"Deslocamento Lateral",sets:3,reps:"12",style:"Barra reta",muscle:"Glúteo / Abdutores",obs:"",icon:"↔️"},
+      {name:"Remada Livre",sets:3,reps:"10",style:"Halter",muscle:"Costas",obs:"Supinada",icon:"🚣"},
+      {name:"Agachamento 3s",sets:3,reps:"10",style:"Halter",muscle:"Quadríceps / Glúteo",obs:"Isometria na descida",icon:"🏋️‍♀️"},
+    ]},
+    {group:"Superset Final",color:"#341F97",items:[
+      {name:"Abdômen Rotação Tronco",sets:3,reps:"12",style:"Halter",muscle:"Core / Oblíquos",obs:"Solo",icon:"🔄"},
+      {name:"Agachamento com Salto",sets:3,reps:"12",style:"",muscle:"Quadríceps / Explosão",obs:"Frente e costas",icon:"⚡"},
+    ]},
+  ]
+};
+
+const PROGRESSIONS = [
+  {week:"Semanas 1-2",focus:"Aprendizado Motor",desc:"Foco na técnica, cargas moderadas (RPE 6-7)",color:"#2ED573"},
+  {week:"Semanas 3-4",focus:"Acúmulo de Volume",desc:"Aumente 5-10% da carga, mantenha reps (RPE 7-8)",color:"#FFA502"},
+  {week:"Semanas 5-6",focus:"Intensificação",desc:"Cargas mais altas, busque falha nas últimas reps (RPE 8-9)",color:"#FF4757"},
+  {week:"Semana 7",focus:"Deload",desc:"Reduza volume em 40%, recuperação ativa",color:"#7C5CFC"},
+];
+
+const TIPS = [
+  "Alongue a musculatura que será trabalhada no dia antes de iniciar.",
+  "Treine com intensidade — o exercício nunca deve se tornar fácil!",
+  "Coordene a respiração com a execução dos movimentos.",
+  "Evite realizar os exercícios em apneia (prender a respiração).",
+  "Descanso entre supersets: 60-90s. Entre tri-sets: 90-120s.",
+  "Aumente a carga progressivamente a cada 2 semanas.",
+  "Hidrate-se com pelo menos 500ml de água durante o treino.",
+  "Frequência ideal: cada grupo muscular 2× por semana.",
+];
+
+// ===== STATE =====
+let currentWorkout = 'A';
+let completed = {A:{},B:{}};
+
+// Load saved state
+try { const s=localStorage.getItem('trainState'); if(s) completed=JSON.parse(s); } catch(e){}
+
+function saveState(){ try{localStorage.setItem('trainState',JSON.stringify(completed))}catch(e){} }
+
+// ===== RENDER =====
+function renderSchedule(){
+  const el = document.getElementById('scheduleCards');
+  el.innerHTML = WEEKLY.map((d,i)=>`
+    <div class="day-card fade-up" data-type="${d.type}" style="animation-delay:${i*60}ms"
+      ${d.type==='A'||d.type==='B'?`onclick="switchTab('workout',null);switchWorkout('${d.type}')"`:''}>
+      <div class="day-dot" style="background:${d.color}"></div>
+      <div class="day-info">
+        <div class="day-name">${d.day}</div>
+        <div class="day-label" style="color:${d.color}">${d.label}</div>
+        <div class="day-desc">${d.desc}${d.dur?' • '+d.dur:''}</div>
+      </div>
+      ${d.type==='A'||d.type==='B'?'<div class="day-arrow">→</div>':''}
+    </div>`).join('');
+
+  const vg = document.getElementById('volumeGrid');
+  vg.innerHTML = VOLUMES.map(v=>`
+    <div class="vol-item">
+      <div class="vol-bar" style="background:${v.color}"></div>
+      <div><div class="vol-name">${v.name}</div><div class="vol-sets">${v.sets}</div></div>
+    </div>`).join('');
+}
+
+function renderWorkout(){
+  const groups = EXERCISES[currentWorkout];
+  const el = document.getElementById('workoutContent');
+  let totalEx = 0;
+
+  el.innerHTML = groups.map((g,gi)=>{
+    const rows = g.items.map((ex,ei)=>{
+      const uid = `${currentWorkout}-${gi}-${ei}`;
+      const isDone = completed[currentWorkout][uid];
+      totalEx++;
+      const obsStr = [ex.muscle, ex.obs].filter(Boolean).join(' • ');
+      return `
+        <div class="ex-row">
+          <div class="ex-check ${isDone?'done':''}" onclick="toggleEx('${uid}',this)">${isDone?'✓':''}</div>
+          <div class="ex-icon" style="background:${g.color}18">${ex.icon}</div>
+          <div class="ex-info">
+            <div class="ex-name">${ex.name}</div>
+            <div class="ex-muscle">${obsStr}</div>
+          </div>
+          <div class="ex-stats">
+            <div class="stat-box" style="background:${g.color}12">
+              <div class="stat-label">Séries</div>
+              <div class="stat-value" style="color:${g.color}">${ex.sets}</div>
+            </div>
+            <div class="stat-box" style="background:${g.color}12">
+              <div class="stat-label">Reps</div>
+              <div class="stat-value" style="color:${g.color}">${ex.reps}</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `<div class="group-block fade-up" style="animation-delay:${gi*80}ms">
+      <div class="group-header" style="background:${g.color}08;border-color:${g.color}25">
+        <div class="group-dot" style="background:${g.color};box-shadow:0 0 8px ${g.color}60"></div>
+        <span class="group-name" style="color:${g.color}">${g.group}</span>
+        <span class="group-count">— ${g.items.length} exercícios</span>
+      </div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  updateProgress();
+}
+
+function renderTips(){
+  document.getElementById('progressionSteps').innerHTML = PROGRESSIONS.map((p,i)=>`
+    <div class="prog-step fade-up" style="animation-delay:${i*80}ms">
+      <div class="prog-num" style="background:${p.color}">${i+1}</div>
+      <div class="prog-info">
+        <div class="prog-title">${p.week} — ${p.focus}</div>
+        <div class="prog-desc">${p.desc}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('tipsList').innerHTML = TIPS.map((t,i)=>`
+    <div class="tip-item fade-up" style="animation-delay:${i*50}ms">
+      <div class="tip-num" style="background:#ECCC6820;color:#ECCC68">${i+1}</div>
+      <div class="tip-text">${t}</div>
+    </div>`).join('');
+}
+
+// ===== INTERACTIONS =====
+function switchTab(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else document.querySelectorAll('.tab-btn').forEach(b=>{
+    if(b.querySelector('.tab-label').textContent.toLowerCase().includes(id==='schedule'?'semana':id==='workout'?'treino':'dica'))
+      b.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchWorkout(w){
+  currentWorkout = w;
+  document.getElementById('btnA').className = w==='A'?'active-a':'';
+  document.getElementById('btnB').className = w==='B'?'active-b':'';
+  renderWorkout();
+}
+
+function toggleEx(uid,el){
+  if(completed[currentWorkout][uid]){
+    delete completed[currentWorkout][uid];
+    el.classList.remove('done');
+    el.textContent = '';
+  } else {
+    completed[currentWorkout][uid] = true;
+    el.classList.add('done');
+    el.textContent = '✓';
+  }
+  saveState();
+  updateProgress();
+}
+
+function updateProgress(){
+  const groups = EXERCISES[currentWorkout];
+  let total=0, done=0;
+  groups.forEach((g,gi)=>g.items.forEach((ex,ei)=>{
+    total++;
+    if(completed[currentWorkout][`${currentWorkout}-${gi}-${ei}`]) done++;
+  }));
+  const pct = total?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = `${done} de ${total} exercícios completos`;
+}
+
+// Timer
+let timerInterval;
+function showRestTimer(){ document.getElementById('restTimer').classList.add('show'); }
+function closeTimer(){ 
+  document.getElementById('restTimer').classList.remove('show');
+  clearInterval(timerInterval);
+}
+function startTimer(secs){
+  clearInterval(timerInterval);
+  let remaining = secs;
+  updateTimerDisplay(remaining);
+  timerInterval = setInterval(()=>{
+    remaining--;
+    updateTimerDisplay(remaining);
+    if(remaining<=0){
+      clearInterval(timerInterval);
+      if('vibrate' in navigator) navigator.vibrate([200,100,200]);
+    }
+  },1000);
+}
+function updateTimerDisplay(s){
+  const m=Math.floor(s/60), sec=s%60;
+  document.getElementById('timerDisplay').textContent = 
+    `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// PWA Install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('installBanner').classList.add('show');
+});
+function installApp(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt=null;}
+  else {
+    // iOS instructions
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if(isIOS) alert('Para instalar:\n1. Toque no ícone de Compartilhar (⬆️)\n2. Selecione "Adicionar à Tela de Início"');
+    else alert('Para instalar:\n1. Abra o menu do navegador (⋮)\n2. Selecione "Instalar app" ou "Adicionar à tela inicial"');
+  }
+  document.getElementById('installBanner').classList.remove('show');
+}
+
+// Show install banner on iOS too
+window.addEventListener('load',()=>{
+  const isStandalone = window.matchMedia('(display-mode:standalone)').matches || navigator.standalone;
+  if(!isStandalone){
+    setTimeout(()=>document.getElementById('installBanner').classList.add('show'),2000);
+  }
+});
+
+// ===== INIT =====
+renderSchedule();
+renderWorkout();
+renderTips();
+</script>
+</body>
+</html>
